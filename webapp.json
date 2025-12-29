@@ -12,12 +12,38 @@
     {
       "name": "Monthly Pro Licences",
       "price": "349",
-      "duration": "1 Month",
+      "duration": "30 days",
       "features": ["Full Category Access", "24/7 Priority Support", "High Quality Audio"]
     },
     {
+      "name": "Pro Licences",
+      "price": "300",
+      "duration": "25 days",
+      "features": ["Full Category Access", "24/7 Priority Support", "High Quality Audio"]
+    },
+        {
+      "name": "Pro Licences",
+      "price": "249",
+      "duration": "20 days",
+      "features": ["Full Category Access", "24/7 Priority Support", "High Quality Audio"]
+    },
+    {
+      "name": "Pro Licences",
+      "price": "200",
+      "duration": "15 days",
+      "features": ["Full Category Access", "24/7 Priority Support", "High Quality Audio"]
+    },
+    
+    {
+      "name": "Pro Licences",
+      "price": "149",
+      "duration": "10 days",
+      "features": ["Full Category Access", "24/7 Priority Support", "High Quality Audio"]
+    },
+    
+    {
       "name": "Quick Pass Licences",
-      "price": "50",
+      "price": "49",
       "duration": "3 Hours",
       "features": ["Full Category Access", "24/7 Support", "Instant Activation"]
     }
