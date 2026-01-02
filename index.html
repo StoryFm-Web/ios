@@ -2,371 +2,333 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Story FM - Premium</title>
+    <title>Story FM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     
-    <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-
     <style>
-        :root {
-            --bg: #000000;
-            --card-bg: #1C1C1E; /* iOS Dark Mode Card */
-            --primary: #0A84FF; /* iOS Blue */
-            --accent: #FF9F0A;  /* iOS Orange */
-            --text: #FFFFFF;
-            --text-sec: #8E8E93;
-            --border: rgba(255, 255, 255, 0.12);
-            --blur: 20px;
+        /* --- CORE STYLES --- */
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+            /* Text Selection Disable */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
-
+        
         body {
-            background: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
-            /* Footer gap fix */
-            padding-bottom: 40px; 
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            cursor: default;
         }
 
-        /* --- Loading Screen --- */
-        #page-loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .spinner {
-            width: 30px; height: 30px; border: 3px solid rgba(255,255,255,0.3);
-            border-top: 3px solid var(--primary); border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+        /* --- HEADER STYLES (Left Aligned) --- */
+        .site-header {
+            position: absolute;
+            top: 0; left: 0; width: 100%;
+            padding: 15px 25px;
+            background: #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 100;
         }
 
-        /* --- Navbar (Glass) --- */
-        .navbar {
-            position: fixed; top: 0; width: 100%; height: 50px;
-            background: rgba(28, 28, 30, 0.6); backdrop-filter: blur(var(--blur));
-            -webkit-backdrop-filter: blur(var(--blur));
-            border-bottom: 0.5px solid var(--border);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px; z-index: 100;
+        .header-logo {
+            font-size: 18px; font-weight: 700; color: #333;
+            text-decoration: none; letter-spacing: 1px; text-transform: uppercase;
+            pointer-events: none;
         }
-        .logo { font-weight: 700; font-size: 18px; letter-spacing: -0.5px; }
-        .nav-link { color: var(--primary); font-size: 14px; font-weight: 500; cursor: pointer; }
 
-        /* --- Hero Section --- */
-        .container { max-width: 500px; margin: 70px auto 0; padding: 0 20px; }
+        /* --- PREMIUM POPUP STYLES (NEW) --- */
+        #premium-modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s;
+        }
 
-        .app-card {
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
             text-align: center;
-            padding: 20px 0 30px;
+            width: 80%;
+            max-width: 300px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transform: scale(0.9);
+            animation: popIn 0.3s forwards;
         }
+
+        .modal-icon { font-size: 40px; margin-bottom: 10px; display: block; }
+        .modal-title { font-size: 18px; font-weight: 700; color: #333; margin: 0 0 10px 0; }
+        .modal-desc { font-size: 13px; color: #666; margin-bottom: 20px; line-height: 1.5; }
+        
+        .modal-btn {
+            background: #ff5722; color: white; border: none;
+            padding: 10px 25px; border-radius: 50px;
+            font-weight: 600; cursor: pointer;
+            font-size: 14px; width: 100%;
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3);
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* --- SWIPE REFRESH INDICATOR --- */
+        #refresh-indicator {
+            position: absolute; top: 60px; left: 50%;
+            transform: translateX(-50%) scale(0);
+            width: 40px; height: 40px;
+            background: white; border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 90; transition: transform 0.2s;
+        }
+        
+        .refresh-spinner {
+            width: 20px; height: 20px;
+            border: 3px solid #f3f3f3; border-top: 3px solid #ff5722; border-radius: 50%;
+        }
+        .spinning { animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- FOOTER STYLES --- */
+        .site-footer {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            padding: 15px; text-align: center; z-index: 10;
+        }
+        .footer-text { font-size: 11px; color: #777; margin: 0; }
+        .footer-links a { color: #555; text-decoration: none; font-size: 11px; margin: 0 5px; font-weight: 600; }
+
+        /* --- BACKGROUND --- */
+        .blob { position: absolute; border-radius: 50%; filter: blur(60px); z-index: -1; opacity: 0.5; }
+        .blob-1 { top: -10%; left: -10%; width: 250px; height: 250px; background: #a18cd1; }
+        .blob-2 { bottom: -10%; right: -10%; width: 250px; height: 250px; background: #ff9a9e; }
+
+        /* --- LOADING SCREEN --- */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; transition: opacity 0.3s ease;
+        }
+        .pulse-loader {
+            width: 60px; height: 60px; background: #ff5722; border-radius: 18px;
+            display: flex; justify-content: center; align-items: center;
+            color: white; font-weight: bold; font-size: 24px;
+            box-shadow: 0 10px 30px rgba(255, 87, 34, 0.4);
+            animation: pulse 0.8s infinite alternate;
+        }
+        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.1); } }
+
+        /* --- MAIN CARD --- */
+        #main-content {
+            display: none; width: 100%; height: 100%;
+            justify-content: center; align-items: center; z-index: 20;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            width: 85%; max-width: 360px; border-radius: 5px;
+            padding: 35px 25px; text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            animation: floatUp 0.5s ease-out;
+        }
+        @keyframes floatUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         .app-icon {
-            width: 90px; height: 90px; margin: 0 auto 15px;
-            background: linear-gradient(135deg, #FF9F0A, #FF375F);
-            border-radius: 20px; display: flex; align-items: center; justify-content: center;
-            font-size: 40px; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            width: 100px; height: 100px; border-radius: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15); margin-bottom: 20px;
+            object-fit: cover; background: #eee; pointer-events: none;
         }
 
-        .app-title { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
-        .app-sub { color: var(--text-sec); font-size: 14px; margin-bottom: 15px; }
+        h1 { margin: 0; font-size: 24px; color: #333; }
+        .badge { background: #e3f2fd; color: #1976d2; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; margin: 8px 0 25px 0; display: inline-block; }
+        .btn-group { display: flex; gap: 12px; }
+        .btn {
+            flex: 1; padding: 14px 0; border-radius: 16px; border: none; font-weight: 600; font-size: 15px; cursor: pointer; text-decoration: none;
+            display: flex; justify-content: center; align-items: center;
+            -webkit-user-select: none; user-select: none;
+        }
+        .btn-open { background: #f1f3f5; color: #333; }
+        .btn-dl { background: linear-gradient(135deg, #ff5722, #ff8a65); color: white; box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3); }
 
-        /* --- Main Action Button (iOS Style) --- */
-        .btn-main {
-            background: var(--primary); color: #fff;
-            width: 100%; padding: 14px; border-radius: 14px;
-            font-weight: 600; font-size: 16px; border: none;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            cursor: pointer; margin-top: 10px; transition: transform 0.1s;
-        }
-        .btn-main:active { transform: scale(0.96); opacity: 0.9; }
-
-        /* --- Social Links (Grid) --- */
-        .social-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        .btn-social {
-            padding: 12px; border-radius: 12px;
-            background: var(--card-bg); 
-            color: var(--text); text-decoration: none; display: flex;
-            align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 500;
-        }
-
-        /* --- Sections Headers --- */
-        .section-title {
-            font-size: 13px; color: var(--text-sec); text-transform: uppercase;
-            font-weight: 600; margin: 30px 0 10px 5px; letter-spacing: 0.5px;
-        }
-
-        /* --- Creator Card --- */
-        .card-box {
-            background: var(--card-bg); border-radius: 14px;
-            padding: 20px; position: relative;
-            margin-bottom: 15px;
-        }
-        .cr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .price-badge { 
-            background: rgba(255,255,255,0.1); padding: 4px 10px; 
-            border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--accent);
-        }
-        .feat-list { list-style: none; margin-top: 15px; }
-        .feat-list li { 
-            font-size: 13px; color: #ddd; margin-bottom: 8px; display: flex; gap: 10px; align-items: center; 
-            padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .feat-list li:last-child { border-bottom: none; }
-        .feat-list i { color: var(--primary); font-size: 16px; }
-
-        /* --- License Plans (Dynamic) --- */
-        #license-container { display: flex; flex-direction: column; gap: 12px; }
-        
-        .plan-item {
-            background: var(--card-bg); border-radius: 14px; padding: 16px;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .plan-info h4 { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
-        .plan-info p { font-size: 12px; color: var(--text-sec); }
-        
-        .plan-btn {
-            background: rgba(255,255,255,0.1); color: var(--primary);
-            padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600;
-            border: none; cursor: pointer; min-width: 80px;
-        }
-
-        /* --- Footer --- */
-        .footer {
-            margin-top: 30px; text-align: center; color: var(--text-sec);
-            font-size: 11px;
-        }
-        .footer span { margin: 0 8px; cursor: pointer; }
-
-        /* --- Modal --- */
-        .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); z-index: 2000;
-            display: none; align-items: center; justify-content: center;
-            opacity: 0; transition: 0.3s;
-        }
-        .modal.active { opacity: 1; }
-        
-        .modal-box {
-            background: #2C2C2E; width: 85%; max-width: 320px;
-            padding: 25px; border-radius: 20px; text-align: center;
-            transform: scale(0.9); transition: 0.2s;
-        }
-        .modal.active .modal-box { transform: scale(1); }
-        .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
-        .modal-text { font-size: 14px; color: #AEAEB2; line-height: 1.5; margin-bottom: 20px; }
-        .modal-close {
-            display: block; width: 100%; padding: 12px; background: var(--primary);
-            color: white; border-radius: 12px; border: none; font-weight: 600;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
-        /* Maintenance */
-        #maint-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 10000; display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-        }
     </style>
 </head>
-<body>
+<body ondragstart="return false;" onselectstart="return false;">
 
-    <!-- Loading -->
-    <div id="page-loader"><div class="spinner"></div></div>
+    <header class="site-header">
+        <span class="header-logo">Story FM</span>
+    </header>
 
-    <!-- Maintenance -->
-    <div id="maint-overlay">
-        <i class="ri-tools-fill" style="font-size: 50px; color: var(--text-sec); margin-bottom: 20px;"></i>
-        <h3>Maintenance</h3>
-        <p style="color: var(--text-sec); font-size: 14px;">We'll be back shortly.</p>
-    </div>
-
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="logo">Story FM</div>
-        <div class="nav-menu">
-            <span class="nav-link" onclick="openModal('About Us', 'Story FM is the premium platform for high-quality audio stories.')">About</span>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="container">
-        
-        <!-- App Header -->
-        <div class="app-card">
-            <div class="app-icon">📻</div>
-            <div class="app-title">Story FM</div>
-            <div class="app-sub">Version <span id="ver-txt">...</span> • Premium Audio</div>
-
-            <button class="btn-main" id="dl-btn">
-                <span style="font-weight:700">Download Now</span>
-            </button>
-
-            <div class="social-row">
-                <a href="#" id="tg-link" target="_blank" class="btn-social">
-                    <i class="ri-telegram-fill" style="color:#229ED9"></i> Telegram Join
-                </a>
-                <a href="#" id="yt-link" target="_blank" class="btn-social">
-                    <i class="ri-youtube-fill" style="color:#FF0000"></i> YouTube Join
-                </a>
-            </div>
-        </div>
-
-        <!-- Creator Zone (JSON Controlled) -->
-        <div id="offer-zone" style="display:none;">
-            <div class="section-title">Creator and Writer</div>
-            <div class="card-box">
-                <div class="cr-header">
-                    <h3 style="font-size:16px;">Creator Lifetime Access</h3>
-                    <div class="price-badge" id="cr-price">₹49</div>
-                </div>
-                <p style="font-size:13px; color:var(--text-sec);">stories creator and earn money.</p>
-                <ul class="feat-list">
-                    <li><i class="ri-check-line"></i> Unlimited Uploads</li>
-                    <li><i class="ri-check-line"></i> Lifetime Validity</li>
-                                        <li><i class="ri-check-line"></i>Create Unlimited licence</li>
-                                 <li><i class="ri-check-line"></i>Shell Unlimited licence</li>       
-                                 <li><i class="ri-check-line"></i>7/24 Full support</li>
-                                 
-                </ul>
-            </div>
-        </div>
-
-        <!-- License Plans (JSON Controlled) -->
-        <div id="license-section" style="display:none;">
-            <div class="section-title">Listener Licenses</div>
-            <div id="license-container">
-                <!-- Plans will be injected here via JS -->
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <span onclick="openModal('Terms', 'All payments are final. No refunds.')">Terms</span> • 
-            <span onclick="openModal('Privacy', 'We respect your data privacy.')">Privacy</span>
-            <br><br>
-            <p style="opacity: 0.3;">© 2025 Story FM</p>
-        </div>
-
-    </div>
-
-    <!-- Modal -->
-    <div class="modal" id="infoModal">
-        <div class="modal-box">
-            <h3 id="m-title" class="modal-title">Title</h3>
-            <p id="m-body" class="modal-text">Text</p>
-            <button class="modal-close" onclick="closeModal()">Close</button>
+    <div id="premium-modal">
+        <div class="modal-content">
+            <span class="modal-icon">👑</span>
+            <h3 class="modal-title">Premium Content</h3>
+            <p class="modal-desc">This content is protected. Please download the app to access full features.</p>
+            <button class="modal-btn" onclick="closeModal()">OK, Got it</button>
         </div>
     </div>
+
+    <div id="refresh-indicator">
+        <div class="refresh-spinner"></div>
+    </div>
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div id="splash-screen">
+        <div class="pulse-loader">FM</div>
+    </div>
+
+    <div id="main-content">
+        <div class="glass-card">
+            <img src="https://img.wapka.org/00gqz5.jpg" 
+                 onerror="this.src='https://via.placeholder.com/150/ff5722/ffffff?text=FM'" 
+                 class="app-icon">
+            
+            <h1>STORY FM</h1>
+            <div class="badge" id="verText">VERIFYING...</div>
+
+            <div class="btn-group">
+                <button onclick="runIntent()" class="btn btn-open">OPEN</button>
+                <a id="dlLink" href="#" class="btn btn-dl">DOWNLOAD</a>
+            </div>
+            
+            <p style="margin-top:20px; font-size:11px; color:#999;"></p>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <p class="footer-text">&copy; 2026 Story FM Official</p>
+        <div class="footer-links">
+            <a href="#">Privacy</a> • <a href="#">Terms</a>
+        </div>
+    </footer>
 
     <script>
-        // *** LIVE CONFIG URL ***
-        const JSON_URL = 'https://raw.githubusercontent.com/storyfmofficial/Web/refs/heads/root/webapp.json';
-
-        // Elements
-        const elVer = document.getElementById('ver-txt');
-        const elTg = document.getElementById('tg-link');
-        const elYt = document.getElementById('yt-link');
-        const elDlBtn = document.getElementById('dl-btn');
+        // --- POPUP LOGIC ---
+        function showModal() {
+            document.getElementById('premium-modal').style.display = 'flex';
+        }
         
-        // Sections
-        const elOfferZone = document.getElementById('offer-zone');
-        const elCrPrice = document.getElementById('cr-price');
-        const elLicSection = document.getElementById('license-section');
-        const elLicContainer = document.getElementById('license-container');
-        
-        // System
-        const elLoader = document.getElementById('page-loader');
-        const elMaint = document.getElementById('maint-overlay');
-
-        let appData = null;
-
-        async function fetchAppData() {
-            try {
-                const res = await fetch(JSON_URL + '?t=' + new Date().getTime()); // Prevent cache
-                if (!res.ok) throw new Error("API Fail");
-                appData = await res.json();
-                renderUI(appData);
-            } catch (err) {
-                console.error(err);
-                elLoader.style.display = 'none';
-            }
+        function closeModal() {
+            document.getElementById('premium-modal').style.display = 'none';
         }
 
-        function renderUI(data) {
-            // Maintenance Check
-            if (data.maintenance) {
-                elMaint.style.display = 'flex';
-                elLoader.style.display = 'none';
-                return;
-            }
+        // --- DISABLE LONG PRESS & SHOW POPUP ---
+        window.addEventListener('contextmenu', function (e) { 
+            e.preventDefault(); // Default menu band
+            showModal(); // Apna popup chalu
+        }, false);
 
-            // Basic Info
-            elVer.innerText = data.version;
-            elTg.href = data.telegram;
-            elYt.href = data.youtube;
-
-            // 1. Creator Offer (₹49)
-            if (data.offer_active && data.creator_price) {
-                elOfferZone.style.display = 'block';
-                elCrPrice.innerText = `₹${data.creator_price}`;
-            }
-
-            // 2. License Plans (Dynamic Loop from JSON)
-            if (data.license_plans && data.license_plans.length > 0) {
-                elLicSection.style.display = 'block';
-                elLicContainer.innerHTML = ''; // Clear old
-
-                data.license_plans.forEach(plan => {
-                    const html = `
-                        <div class="plan-item">
-                            <div class="plan-info">
-                                <h4>${plan.name}</h4>
-                                <p>${plan.duration} • ${plan.features[0]}</p>
-                            </div>
-                            <button class="plan-btn">₹${plan.price}</button>
-                        </div>
-                    `;
-                    elLicContainer.innerHTML += html;
-                });
-            }
-
-            elLoader.style.display = 'none';
+        // --- KEYBOARD SHORTCUTS DISABLE ---
+        document.onkeydown = function(e) {
+            if(event.keyCode == 123) { return false; } 
+            if(e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) { return false; }
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
         }
 
-        // Download Action
-        elDlBtn.addEventListener('click', () => {
-            if (!appData?.ApkLink) return;
-            const btnHtml = elDlBtn.innerHTML;
-            elDlBtn.innerHTML = '<div class="spinner" style="width:20px;height:20px;"></div>';
+        // --- CONFIGURATION ---
+        const packageName = "com.story.FM"; 
+        const scheme = "storyfm";
+        const host = "open";
+        const jsonUrl = "https://raw.githubusercontent.com/storyfmofficial/Web/refs/heads/root/auto_update.json";
+        
+        const intentUrl = "intent://" + host + "#Intent;scheme=" + scheme + ";package=" + packageName + ";category=android.intent.category.BROWSABLE;end";
+
+        // --- 1. INTENT LOGIC ---
+        function runIntent() {
+            window.location.href = intentUrl;
+        }
+        runIntent();
+
+        // --- 2. TIMER FIX ---
+        setTimeout(function() {
+            var splash = document.getElementById("splash-screen");
+            var main = document.getElementById("main-content");
             
-            setTimeout(() => {
-                window.location.href = appData.ApkLink;
-                elDlBtn.innerHTML = btnHtml;
-            }, 1000);
+            if(splash) {
+                splash.style.opacity = "0";
+                setTimeout(function(){ splash.style.display = "none"; }, 300);
+            }
+            if(main) {
+                main.style.display = "flex";
+            }
+        }, 500);
+
+        // --- 3. JSON FETCH ---
+        fetch(jsonUrl)
+            .then(res => res.json())
+            .then(data => {
+                if(data.version) document.getElementById("verText").innerText = "VERSION " + data.version;
+                if(data.link) document.getElementById("dlLink").href = data.link;
+            })
+            .catch(e => {
+                document.getElementById("verText").innerText = "LATEST VERSION";
+                document.getElementById("dlLink").href = "";
+            });
+
+        // --- 4. SWIPE TO REFRESH LOGIC ---
+        let startY = 0;
+        let isPulling = false;
+        const refreshIndicator = document.getElementById('refresh-indicator');
+        const spinner = document.querySelector('.refresh-spinner');
+
+        window.addEventListener('touchstart', (e) => {
+            if (window.scrollY === 0) {
+                startY = e.touches[0].pageY;
+                isPulling = true;
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            if (!isPulling) return;
+            const currentY = e.touches[0].pageY;
+            const diff = currentY - startY;
+
+            if (diff > 0 && diff < 200) {
+                refreshIndicator.style.transform = `translateX(-50%) translateY(${diff * 0.4}px) scale(1)`;
+                refreshIndicator.style.opacity = "1";
+                spinner.classList.remove('spinning');
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchend', (e) => {
+            if (!isPulling) return;
+            isPulling = false;
+
+            const endY = e.changedTouches[0].pageY;
+            const diff = endY - startY;
+
+            if (diff > 100) {
+                refreshIndicator.style.transform = `translateX(-50%) translateY(50px) scale(1)`;
+                spinner.classList.add('spinning');
+                setTimeout(() => {
+                    location.reload();
+                }, 800);
+            } else {
+                refreshIndicator.style.transform = `translateX(-50%) scale(0)`;
+                refreshIndicator.style.opacity = "0";
+            }
         });
-
-        // Modal Logic
-        const modal = document.getElementById('infoModal');
-        const mTitle = document.getElementById('m-title');
-        const mBody = document.getElementById('m-body');
-
-        window.openModal = function(title, text) {
-            mTitle.innerText = title;
-            mBody.innerText = text;
-            modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('active'), 10);
-        }
-
-        window.closeModal = function() {
-            modal.classList.remove('active');
-            setTimeout(() => modal.style.display = 'none', 300);
-        }
-
-        fetchAppData();
     </script>
 </body>
 </html>
